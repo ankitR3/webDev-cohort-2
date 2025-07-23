@@ -1,44 +1,43 @@
-import { Client } from "pg";
-
-async function insertAddress() {
-    const client = new Client({
-        host: 'localhost',
-        port: 5433, // change this if your PostgreSQL uses a different port
-        database: 'postgres',
-        user: 'postgres',
-        password: 'mysecretpassword'
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
-
-    try {
-        await client.connect();
-
-        const insertQuery = `
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const pg_1 = require("pg");
+function insertAddress() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = new pg_1.Client({
+            host: 'localhost',
+            port: 5433, // change this if your PostgreSQL uses a different port
+            database: 'postgres',
+            user: 'postgres',
+            password: 'mysecretpassword'
+        });
+        try {
+            yield client.connect();
+            const insertQuery = `
             INSERT INTO addresses (user_id, city, country, street, pincode)
             VALUES ($1, $2, $3, $4, $5)
         `;
-        const values = [1, 'New York', 'USA', '123 Broadway St', '10001'];
-
-        const res = await client.query(insertQuery, values);
-        console.log('Address insertion success:', res.rowCount);
-    } catch (err) {
-        console.error('Error inserting address:', err);
-    } finally {
-        await client.end();
-    }
+            const values = [1, 'New York', 'USA', '123 Broadway St', '10001'];
+            const res = yield client.query(insertQuery, values);
+            console.log('Address insertion success:', res.rowCount);
+        }
+        catch (err) {
+            console.error('Error inserting address:', err);
+        }
+        finally {
+            yield client.end();
+        }
+    });
 }
-
 insertAddress();
-
-
-
-
-
-
-
-
-
-
-
 // const client = new Client({
 //     host: "localhost",
 //     port: 5433,
@@ -46,7 +45,6 @@ insertAddress();
 //     user: "postgres",
 //     password: "mysecretpassword",
 // });
-
 // async function createAddressesTable() {
 //     await client.connect();
 //     const result = await client.query(`
@@ -63,22 +61,7 @@ insertAddress();
 //     console.log("Table 'addresses' created:", result.command); // should log: CREATE
 //     await client.end();
 // }
-
 // createAddressesTable();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // Async function to fetch user data from the database given an email
 // async function getUser(email: string) {
 //     const client = new Client({
@@ -88,13 +71,11 @@ insertAddress();
 //         user: "postgres",
 //         password: "mysecretpassword"
 //     })
-
 //     try {
 //         await client.connect(); // Ensure client connection is established
 //         const query = 'SELECT * FROM users WHERE email = $1';
 //         const values = [email];
 //         const result = await client.query(query, [email]);
-
 //         if (result.rows.length) {
 //             console.log('Users found', result.rows[0]); // Output user data
 //             return result.rows[0]; // Return the user data
@@ -109,20 +90,8 @@ insertAddress();
 //         await client.end(); // Close the client connection
 //     }
 // }
-
 // // Example usage
 // getUser('user3@example.com').catch(console.error);
-
-
-
-
-
-
-
-
-
-
-
 // async function insertData() {
 //     const client = new Client({
 //         host: 'localhost',
@@ -131,7 +100,6 @@ insertAddress();
 //         user: "postgres",
 //         password: "mysecretpassword"
 //     });
-
 //     try {
 //         await client.connect(); // Ensure client connection is established
 //         const insertQuery = "INSERT INTO users (username, email, password) VALUES ('username2', 'user3@example.com', 'user_password')";
@@ -143,19 +111,7 @@ insertAddress();
 //         await client.end(); // Close the client connection
 //     }
 // }
-
 // insertData();
-
-
-
-
-
-
-
-
-
-
-
 // const client = new Client({
 //     host: "localhost",
 //     port: 5433,
@@ -163,7 +119,6 @@ insertAddress();
 //     user: "postgres",
 //     password: "mysecretpassword",
 // })
-
 // async function createUsersTable() {
 //     await client.connect()
 //     const result = await client.query(`
@@ -177,5 +132,4 @@ insertAddress();
 //     `)
 //     console.log(result);
 // }
-
 // createUsersTable();
