@@ -3,32 +3,27 @@ import { z } from 'zod';
 import express from 'express';
 
 const app = express();
-app.use(express.json());
 
 // Define the schema for profile update
 const userProfileSchema = z.object({
   name: z.string().min(1, { message: "Name cannot be empty" }),
-  email: z.string().email({ message: "Invalid email format" }),
-  age: z.number().min(18, { message: "You must be at least 18 years old" }).optional()
+  email: z.string().min(1, { message: "Invalid email format" }),
+  age: z.number().min(18, { message: "You must be at least 18 years old" }).optional(),
 });
 
-// ✅ Create TypeScript type from Zod schema
-type UserProfile = z.infer<typeof userProfileSchema>;
+export type FinalUserSchema = z.infer<typeof userProfileSchema>;
 
 app.put("/user", (req, res) => {
-  const parsed = userProfileSchema.safeParse(req.body);
+  const { success } = userProfileSchema.safeParse(req.body);
+  const updateBody: FinalUserSchema = req.body; // how to assign a type to updateBody?
 
-  if (!parsed.success) {
-    return res.status(411).json({ errors: parsed.error.format() });
+  if (!success) {
+    res.status(411).json({});
+    return
   }
-
-  // ✅ parsed.data is now strongly typed as UserProfile
-  const updateBody: UserProfile = parsed.data;
-
-  // Update database logic here
+  // Update database here
   res.json({
-    message: "User updated",
-    data: updateBody
+    message: "User updated"
   });
 });
 
@@ -52,12 +47,15 @@ app.listen(3000, () => {
 // type EventType = 'click' | 'scroll' | 'mousemove';
 // type ExcludeEvent = Exclude<EventType, 'scroll'>; // 'click' | 'mousemove'
 
-// const handleEvent = {event: ExcludeEvent} => {
+// const handleEvent = (event: EventType) => {
 //     console.log(`Handling event: ${event}`);
-// }
+// };
 
-// handleEvent('click'); // OK
-// handleEvent('scroll'); // OK
+// handleEvent('click');      // OK
+// handleEvent('mousemove');  // OK
+// handleEvent('scroll');
+
+
 
 
 
